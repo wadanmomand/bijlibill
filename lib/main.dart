@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import 'ads/ad_banner.dart';
 import 'ui/calculator_screen.dart';
 import 'ui/history_screen.dart';
 import 'ui/theme.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Ads are best-effort only: a failure here must never block the app.
+  try {
+    await MobileAds.instance.initialize();
+  } catch (_) {
+    // Ignore — the banner simply stays hidden.
+  }
   runApp(const BijliBillApp());
 }
 
@@ -36,11 +45,19 @@ class _HomeShellState extends State<_HomeShell> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('BIJLI BILL CALCULATOR')),
-      body: IndexedStack(
-        index: _index,
-        children: const [
-          CalculatorScreen(),
-          HistoryScreen(),
+      body: Column(
+        children: [
+          Expanded(
+            child: IndexedStack(
+              index: _index,
+              children: const [
+                CalculatorScreen(),
+                HistoryScreen(),
+              ],
+            ),
+          ),
+          // Persistent AdMob banner (TEST ads until production IDs land).
+          const AdBanner(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

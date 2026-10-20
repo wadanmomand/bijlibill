@@ -51,6 +51,16 @@ android {
 
     buildTypes {
         release {
+            // R8 shrinking stays OFF (standing rule, 2026-10-20): the Ads
+            // SDK's transitive WorkManager/Room classes crash at startup
+            // when stripped. Keep rules are still shipped + wired below so
+            // the build stays safe if shrinking is ever turned on.
+            isMinifyEnabled = false
+            isShrinkResources = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             // Signed with the upload keystore from key.properties when it
             // exists; falls back to debug keys so local --release runs
             // still work on machines without the keystore.
