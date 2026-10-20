@@ -1,4 +1,4 @@
-package com.aatishstudio.bijli_bill
+package com.aatishstudio.bijlibill
 
 import io.flutter.embedding.android.FlutterActivity
 
